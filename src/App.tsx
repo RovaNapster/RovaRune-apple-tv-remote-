@@ -59,7 +59,20 @@ export default function App() {
         </div>
 
         {/* Center Stage */}
-        <div className="flex flex-col items-center justify-center relative border border-primary/10 rounded-[30px] md:rounded-[40px] bg-primary/[0.02] py-12 md:py-0 min-h-[450px] md:min-h-0">
+        <motion.div 
+          onPanEnd={(_event, info) => {
+            const threshold = 40;
+            const { offset } = info;
+            if (Math.abs(offset.x) > Math.abs(offset.y)) {
+              if (offset.x > threshold) handleAction("Volume Up");
+              else if (offset.x < -threshold) handleAction("Volume Down");
+            } else {
+              if (offset.y > threshold) handleAction("Pause");
+              else if (offset.y < -threshold) handleAction("Play");
+            }
+          }}
+          className="flex flex-col items-center justify-center relative border border-primary/10 rounded-[30px] md:rounded-[40px] bg-primary/[0.02] py-12 md:py-0 min-h-[450px] md:min-h-0 touch-none"
+        >
           
           {/* Action Feedback Overlay */}
           <div className="absolute top-6 md:top-8 h-8">
@@ -148,7 +161,7 @@ export default function App() {
               isActive={lastAction === "Pause"}
             />
           </div>
-        </div>
+        </motion.div>
 
         {/* Right Sidebar / Bottom Controls on Mobile */}
         <div className="flex flex-row md:flex-col justify-center md:justify-between py-4 md:py-8 border-t md:border-t-0 md:border-l border-primary/30 px-4 md:px-0 md:pl-8 gap-8">
